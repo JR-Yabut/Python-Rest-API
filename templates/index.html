@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Rolling API</title>
+
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
+</head>
+<body>
+    <header>
+        Dice Roller API
+    </header>
+
+    <form id="diceform">
+        <label for = "numOfDie">
+            How many dice to roll:
+        </label>
+        <input type = number id = "numOfDie" name = "count"
+        required minlength="1" value="1">
+        
+        <br>
+
+        <label for = "sidesOfDie">
+            What dice to roll:
+        </label>
+        <input type = number id = "sidesOfDie" name = "sides"
+        required minlength="1" value="20">
+        
+        <br>
+        
+        <button type="submit">Roll!</button>
+    </form>
+
+    <div>
+        <strong>Dice: </strong> <span id="sides"></span>
+        <br/>
+        <strong>Count: </strong> <span id="count"></span>
+        <br/>
+        <strong>Result Sum: </strong> <span id="diceSum"></span>
+        <br/>
+        <strong>Individual Results: </strong>
+        <br/>
+        <ul id="resultList"></ul>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#diceform").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    method: "GET",
+                    url: `/roll?count=${$("#numOfDie").val()}&sides=${$("#sidesOfDie").val()}`
+                }).done(function(data) {
+                    console.log(data);
+                    $("#sides").text("D" + data.sides);
+                    $("#count").text(data.count);
+                    
+                    const resultList = data.results;
+
+                    let diceSum = 0;
+
+                    for (let result of resultList) {
+                        $("#resultList").append($("<li></li>").text(result));
+                        diceSum += result;
+                    }
+
+                    $("#diceSum").text(diceSum);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
