@@ -64,6 +64,8 @@
                     const resultList = data.results;
 
                     let diceSum = 0;
+                    
+                    $("#resultList").empty();
 
                     for (let result of resultList) {
                         $("#resultList").append($("<li></li>").text(result));
